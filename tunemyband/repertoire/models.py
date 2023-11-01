@@ -11,13 +11,8 @@ class Author(models.Model):
         return self.name
 
 
-GENRES = \
-    (
-        ('1', 'Рок'),
-        ('2', 'Дабстеп'),
-        ('3', 'Электронная музыка'),
-        ('0', 'Другое'),
-    )
+class Genre(models.Model):
+    name = models.CharField(max_length=100, primary_key=True)
 
 
 class Composition(models.Model):
@@ -26,7 +21,7 @@ class Composition(models.Model):
     create_date = models.DateTimeField(null=True, blank=True)
     release_date = models.DateTimeField(null=True, blank=True)
     duration = models.DurationField()
-    genres = models.CharField(max_length=1, choices=GENRES, default='0')
+    genres = models.ManyToManyField(Genre)
 
     def __str__(self):
         return f'{self.name}'
@@ -35,7 +30,7 @@ class Composition(models.Model):
 class Adaptation(models.Model):
     original = models.ForeignKey(to=Composition, on_delete=models.CASCADE)
     duration = models.DurationField()
-    genres = models.CharField(max_length=1, choices=GENRES, default='0')
+    genres = models.ManyToManyField(Genre)
     file = models.FileField(null=True, blank=True)
 
 

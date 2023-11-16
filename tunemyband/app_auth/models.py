@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from home.models import Skills
+from filer.fields.image import FilerImageField
 
 
 class CustomUser(AbstractUser):
@@ -10,6 +11,7 @@ class CustomUser(AbstractUser):
         max_length=12, blank=True, verbose_name='Номер телефона')
     email = models.EmailField(
         max_length=255, unique=True, verbose_name='Почта')
+    photo = FilerImageField(null=True, blank=True, on_delete=models.SET_NULL)
     birthday = models.DateField(default=date.today() - relativedelta(years=20), verbose_name='Дата рождения')
     sex = models.CharField(max_length=1, default='n', verbose_name='Пол',
                            choices=(

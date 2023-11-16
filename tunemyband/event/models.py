@@ -1,41 +1,48 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-# from ..repertoire.models import Composition
-
-# TODO: add place by google map api https://stackoverflow.com/questions/48388366/i-want-to-add-a-location-field-in-django-model-which-take-location-input-by-putt
+from app_auth.models import CustomUser
+from repertoire.models import Adaptation
+from band.models import MusicBand
 
 
 class Event(models.Model):
-    name = models.CharField(db_index=True, max_length=100)
-    date = models.DateField(db_index=True)
-    # place = models.
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    name = models.CharField(max_length=100)
+    start_datetime = models.DateTimeField(null=False, blank=False)
+    place = models.CharField(max_length=100)
+    end_datetime = models.DateTimeField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-
-    # LEVELS = \
-    #     (
-    #         ('6', 'Школьный'),
-    #         ('5', 'Студенческий'),
-    #         ('4', 'Городской'),
-    #         ('3', 'Областной'),
-    #         ('2', 'Федеральный'),
-    #         ('1', 'Мировой')
-    #     )
-    # level = models.CharField(max_length=1, choices=LEVELS)
-    sponsor = models.CharField(max_length=100)
+    LEVELS = \
+        (
+            ('6', 'Школьный'),
+            ('5', 'Студенческий'),
+            ('4', 'Городской'),
+            ('3', 'Областной'),
+            ('2', 'Федеральный'),
+            ('1', 'Мировой')
+        )
+    level = models.CharField(max_length=1, choices=LEVELS)
+    sponsor = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return f'{self.name} - {self.date}'
+        return f'{self.name}|{self.start_datetime}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'start_datetime'], name='unique_event')
+        ]
 
 
-# class Performance(models.Model):
-#     id = models.IntegerField(db_index=True, editable=False, primary_key=True)
-#     event = models.ForeignKey(to=Event, on_delete=models.CASCADE)
-#     serial_number = models.PositiveSmallIntegerField()
-#     # composition = models.ForeignKey(to='Composition', on_delete=models.CASCADE)
-#     artists = models.ManyToManyField(to=settings.AUTH_USER_MODEL)
-#
-#     def __str__(self):
-#         return f'{self.event.name}|{self.composition.name}'
+class Performance(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    composition = models.ForeignKey(Adaptation, on_delete=models.CASCADE)
+    music_band = models.ForeignKey(MusicBand, on_delete=models.CASCADE)
+    artists = models.ManyToManyField(CustomUser, blank=False)
+
+    def __str__(self):
+        return f'{self.event}|{self.composition}|{self.music_band}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['event', 'composition', 'music_band'], name='unique_performance')
+        ]

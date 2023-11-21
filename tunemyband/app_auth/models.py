@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
-from home.models import Skills
+from home.models import Skills, Genre
+from band.models import MusicBand
 from filer.fields.image import FilerImageField
 
 
@@ -22,8 +23,9 @@ class CustomUser(AbstractUser):
     about = models.TextField(null=True, blank=True, verbose_name='О себе')
     skills = models.ManyToManyField(Skills, verbose_name='Навыки', blank=True,
                                             related_name='user_skills', related_query_name='skill')
-    # genres = models.ManyToManyField(Genre, default='Другое')
-
+    genres = models.ManyToManyField(Genre, verbose_name='Любимые жанры', default='Другое', blank=True,
+                                    related_name='user_genres', related_query_name='genre')
+    music_band = models.ForeignKey(MusicBand, on_delete=models.SET_NULL, null=True, blank=True)
     groups = models.ManyToManyField(
         Group,
         verbose_name='groups',

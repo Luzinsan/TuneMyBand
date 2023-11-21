@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} Главная страница {% endblock %}
+{% block content %}
+    <h1>Музыкальные группы</h1>
+    {% for band in bands %}
+
+        <p>Название группы:
+            <a href="{% url 'band_home' band.name %}">{{ band.name }}</a></p>
+        <p>Дата создания: {{ band.register_date|date:"F j, Y" }} </p>
+        <p>Дата регистрации в системе: {{ band.date_created|date:"F j, Y" }} </p>
+        <p>Медиа-ссылка на группу: {{ band.url }}</p>
+    {% endfor %}
+    <h1>Пользователи системы</h1>
+    {% for user in users %}
+            <p>username:
+                <a href="{% url 'home' user.username %}">{{ user.username }}</a></p>
+            <p>Имя: {{ user.first_name }}</p>
+            <p>Фамилия: {{ user.last_name }} </p>
+            <p>Дата регистрации: {{ user.date_joined|date:"F j, Y" }} </p>
+    {% endfor %}
+<iframe src="https://calendar.google.com/calendar/embed?src=5fcff0b24048b71f6097d7760eb3cdce54f07411114229a3a1a03b595599db45%40group.calendar.google.com&ctz=Asia%2FNovosibirsk"
+        style="border: 0"
+        width="800" height="600" frameborder="0" scrolling="no"></iframe>
+{% endblock %}

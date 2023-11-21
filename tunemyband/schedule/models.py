@@ -8,7 +8,7 @@ from app_auth.models import CustomUser
 class Rehearsal(models.Model):
     music_band = models.ForeignKey(MusicBand, on_delete=models.CASCADE)
     start_date = models.DateTimeField()
-    # place =
+    place = models.CharField(max_length=150, null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
     participants = models.ManyToManyField(CustomUser, blank=False)
     description = models.TextField(null=True, blank=True)

@@ -1,24 +1,21 @@
 from django.shortcuts import render
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
-# from .forms import UserProfileForm
+from band.models import MusicBand
+from .models import CustomUser
 
 
-# class UserProfileCreateView(CreateView):
-#     template_name = 'home/sign_up.html'
-#     form_class = UserProfileForm
-#     success_url = reverse_lazy('home/home.html')
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         # context['rubrics'] = Rubric.objects.all()
-#         return context
+def index(request):
+    latest_registered_bands = MusicBand.objects.order_by('-date_created')[:5]
+    latest_registered_users = CustomUser.objects.order_by('-date_joined')[:5]
+    return render(request, 'app_auth/index.html',
+                  {'bands': latest_registered_bands,
+                   'users': latest_registered_users})
 
 
 def sign_in(request):
-    return render(request, 'home/sign_in.html', {})
+    return render(request, 'app_auth/sign_in.html', {})
 
 
-# def sign_up(request):
-#     return render(request, 'home/sign_up.html', {})
-
+def sign_up(request):
+    return render(request, 'app_auth/sign_up.html', {})

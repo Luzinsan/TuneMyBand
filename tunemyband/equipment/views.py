@@ -1,14 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import HttpResponse
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from .models import Equipment
 
 
-def equipment_list(request):
-    equipments = Equipment.objects.all()
-    return render(request, "equipment/show_equipments.html", {'equipments': equipments})
+def user_equipments(request, username):
+    equipments = Equipment.objects.filter(owner__username=username)
+    return HttpResponse(request,  {'equipments': equipments})
 
 
-def equipment_by_owner(request, owner):
-    equipments = get_object_or_404(Equipment, owner=owner)
-    return render(request, 'equipment/show_equipment_by_owner.html', {'equipments': equipments})
+def music_band_equipments(request, username, music_band):
+    equipments = Equipment.objects.filter(owner__username=username, music_band=music_band)
+    return HttpResponse(request,  {'equipments': equipments})

@@ -1,11 +1,9 @@
 from django.shortcuts import render
+from app_auth.models import CustomUser
 
 
-def index(request):
-    return render(request, 'home/index.html', {})
-
-
-def home(request):
-    return render(request, 'home/home.html', {})
+def home(request, username: str):
+    user = CustomUser.objects.get(username=username)
+    return render(request, 'home/home.html', {'user': user})
 
 

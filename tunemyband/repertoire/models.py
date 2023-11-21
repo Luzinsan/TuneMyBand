@@ -3,10 +3,8 @@ from django.utils import timezone
 from filer.fields.file import FilerFileField
 
 from band.models import MusicBand
-
-
-class Genre(models.Model):
-    name = models.CharField(max_length=100, primary_key=True)
+from home.models import Genre
+from equipment.models import TypeOfEquipment
 
 
 class Original(models.Model):
@@ -15,7 +13,7 @@ class Original(models.Model):
 
     release_date = models.DateTimeField(null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
-    genres = models.ManyToManyField(Genre, blank=True)
+    genres = models.ManyToManyField(Genre, blank=True,  related_name='original_genres', related_query_name='genre')
 
     def __str__(self):
         return f'{self.title}/{self.author}'
@@ -31,10 +29,8 @@ class Adaptation(models.Model):
     music_band = models.ForeignKey(to=MusicBand, on_delete=models.CASCADE)
     duration = models.DurationField(null=True, blank=True)
     genres = models.ManyToManyField(Genre, blank=True)
-    file = FilerFileField(null=True, blank=True, related_name='adaptation_file',
-                          on_delete=models.SET_NULL)
-    musical_parts = FilerFileField(null=True, blank=True, related_name='adaptation_musical_parts',
-                                   on_delete=models.SET_NULL)
+    file = FilerFileField(null=False, blank=False, related_name='adaptation_file',
+                          on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.original}|{self.music_band}'
@@ -42,4 +38,19 @@ class Adaptation(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['original', 'music_band', 'file'], name='unique_adaptation')
+        ]
+
+
+class MusicPart(models.Model):
+    adaptation = models.ForeignKey(to=Adaptation, on_delete=models.CASCADE)
+    instrument = models.ForeignKey(TypeOfEquipment, on_delete=models.SET_DEFAULT, default='Неизвестно')
+    musical_parts = FilerFileField(null=False, blank=False, related_name='adaptation_musical_part',
+                                   on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.adaptation}|{self.musical_parts.name}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['adaptation', 'musical_parts'], name='unique_musical_part')
         ]

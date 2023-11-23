@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from .models import MusicBand
-from app_auth.models import CustomUser
+from django.contrib.auth.models import User
+from django.views import generic
 
 
-def band_home(request, band_name):
-    band = MusicBand.objects.get(name=band_name)
-    return render(request, 'band/band_home.html', {'band': band})
+class DetailView(generic.DetailView):
+    model = MusicBand
+    template_name = "band/index.html"
 

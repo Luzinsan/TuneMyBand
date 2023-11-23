@@ -1,4 +1,4 @@
-from app_auth.models import CustomUser
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from band.models import MusicBand
@@ -12,7 +12,7 @@ class TypeOfEquipment(models.Model):
 
 
 class Equipment(models.Model):
-    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
+    owner = models.ForeignKey(User, on_delete=models.CASCADE,
                               related_name='equipment_owner')
     name = models.CharField(max_length=200)
     type = models.ForeignKey(TypeOfEquipment, on_delete=models.SET_DEFAULT, default='Неизвестно')

@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'easy_thumbnails',
     'filer',
-    'app_auth',
     'tunemyband',
     'band',
     'home',

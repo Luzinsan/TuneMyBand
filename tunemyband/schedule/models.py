@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from band.models import MusicBand
-from app_auth.models import CustomUser
+from django.contrib.auth.models import User
 
 
 class Rehearsal(models.Model):
@@ -10,7 +10,7 @@ class Rehearsal(models.Model):
     start_date = models.DateTimeField()
     place = models.CharField(max_length=150, null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
-    participants = models.ManyToManyField(CustomUser, blank=False)
+    participants = models.ManyToManyField(User, blank=False)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):

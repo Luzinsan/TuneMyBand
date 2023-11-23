@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from app_auth.models import CustomUser
+from django.contrib.auth.models import User
 from repertoire.models import Adaptation
 from band.models import MusicBand
 
@@ -37,7 +37,7 @@ class Performance(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     composition = models.ForeignKey(Adaptation, on_delete=models.CASCADE)
     music_band = models.ForeignKey(MusicBand, on_delete=models.CASCADE)
-    artists = models.ManyToManyField(CustomUser, blank=False)
+    artists = models.ManyToManyField(User, blank=False)
 
     def __str__(self):
         return f'{self.event}|{self.composition}|{self.music_band}'

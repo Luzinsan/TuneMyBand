@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %} Музыкальная группа {% endblock %}
+{% block content %}
+    <h1>Название группы: {{musicband.name}}</h1>
+    <p>Аватарка</p>
+    <p>Медиа-ссылка на группу</p>
+    <h1>Участники группы</h1>
+    {% for member in musicband.profile_set.all %}
+    <p>Имя: {{ member.user.first_name }}</p>
+    <p>Фамилия: {{ member.user.last_name }} </p>
+    <p>Дата регистрации: {{ member.user.date_joined|date:"F j, Y" }} </p>
+{% endfor %}
+{% endblock %}

@@ -2,8 +2,9 @@ from django.urls import path, include
 from . import views
 
 
+app_name = "home"
 urlpatterns = [
-    path('<str:username>', views.home, name='home'),
-    path('<str:username>/equipments/', include('equipment.urls'))
-
+    path('', views.IndexView.as_view(), name='index'),
+    path('<int:pk>', views.HomeView.as_view(), name='home'),
+    path('<int:pk>/equipments/', include('equipment.urls'))
 ]

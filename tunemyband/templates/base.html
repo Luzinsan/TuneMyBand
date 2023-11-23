@@ -7,7 +7,7 @@
 </head>
 <body>
     <img src="{% static 'images/tune.jpg' %}" alt="Logo" width="10%" height="auto">
-        <a href="{% url 'index' %}">Главная</a>
+        <a href="{% url 'home:index' %}">Главная</a>
     {% block content %}{% endblock %}
 </body>
 </html>

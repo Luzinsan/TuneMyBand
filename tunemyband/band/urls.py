@@ -1,9 +1,9 @@
 from django.urls import path, include
 from . import views
 
-
+app_name = 'band'
 urlpatterns = [
-    path('<str:band_name>/', views.band_home, name='band_home'),
+    path('<int:pk>/', views.DetailView.as_view(), name='detail'),
     # path('equipments/', include('equipment.urls'))
 
 ]

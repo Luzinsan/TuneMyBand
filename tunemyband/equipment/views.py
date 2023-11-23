@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from .models import Equipment
 
 
-def user_equipments(request, username):
+def index(request, username):
     equipments = Equipment.objects.filter(owner__username=username)
     return HttpResponse(request,  {'equipments': equipments})
 

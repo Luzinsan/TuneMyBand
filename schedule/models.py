@@ -20,3 +20,5 @@ class Rehearsal(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['music_band', 'start_date'], name='unique_rehearsal_music_band')
         ]
+        verbose_name = 'Репетиция'
+        verbose_name_plural = 'Репетиции'

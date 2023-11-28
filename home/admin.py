@@ -4,4 +4,9 @@ from .models import Skills, Genre, Profile
 
 admin.site.register(Skills)
 admin.site.register(Genre)
-admin.site.register(Profile)
+# admin.site.register(AlterUser)
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    pass

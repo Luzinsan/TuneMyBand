@@ -11,7 +11,7 @@ class Event(models.Model):
     start_datetime = models.DateTimeField(null=False, blank=False)
     place = models.CharField(max_length=100)
     end_datetime = models.DateTimeField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True, max_length=500)
     LEVELS = \
         (
             ('6', 'Школьный'),
@@ -31,6 +31,9 @@ class Event(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['name', 'start_datetime'], name='unique_event')
         ]
+        ordering = ['-start_datetime', 'name']
+        verbose_name = 'Мероприятие'
+        verbose_name_plural = 'Мероприятия'
 
 
 class Performance(models.Model):
@@ -46,3 +49,6 @@ class Performance(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['event', 'composition', 'music_band'], name='unique_performance')
         ]
+        ordering = ['-event__start_datetime', 'music_band__name', 'composition__original__title', ]
+        verbose_name = 'Выступление'
+        verbose_name_plural = 'Выступления'

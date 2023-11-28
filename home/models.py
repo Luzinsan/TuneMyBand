@@ -3,28 +3,43 @@ from django.contrib.auth.models import User
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from band.models import MusicBand
-from filer.fields.image import FilerImageField
 
 
 class Skills(models.Model):
-    name = models.CharField(max_length=100, primary_key=True)
+    name = models.CharField(max_length=100, primary_key=True,
+                            verbose_name='Навык', help_text='Напишите название навыка')
+
+    class Meta:
+        verbose_name = 'Навык'
+        verbose_name_plural = 'Навыки'
 
     def __str__(self):
         return self.name
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=100, primary_key=True)
+    name = models.CharField(max_length=100, primary_key=True,
+                            verbose_name='Жанр', help_text='Напишите название жанра/направления')
+
+    class Meta:
+        verbose_name = 'Жанр'
+        verbose_name_plural = 'Жанры'
 
     def __str__(self):
         return self.name
+
+
+# class AlterUser(User):
+#     first_name = models.CharField(_("first name"), max_length=150, null=False, blank=False)
+#     last_name = models.CharField(_("last name"), max_length=150, null=False, blank=False)
+#     email = models.EmailField(_("email address"), null=False, blank=False)
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.CharField(
         max_length=12, blank=True, verbose_name='Номер телефона')
-    photo = FilerImageField(null=True, blank=True, on_delete=models.SET_NULL)
+    photo = models.ImageField(null=True, blank=True)
     birthday = models.DateField(default=date.today() - relativedelta(years=20), verbose_name='Дата рождения')
     sex = models.CharField(max_length=1, default='n', verbose_name='Пол',
                            choices=(
@@ -43,6 +58,5 @@ class Profile(models.Model):
         return str(self.user)
 
     class Meta:
-        verbose_name_plural = 'Профили'
         verbose_name = 'Профиль'
-
+        verbose_name_plural = 'Профили'

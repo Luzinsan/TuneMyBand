@@ -1,0 +1,24 @@
+{% extends "band_home.html" %}
+
+{% block content %}
+    <table>
+      <thead>
+        <tr>
+            <th>Модель</th>
+            <th>Тип</th>
+            <th>Описание</th>
+            <th>Зарегистрирован</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for equipment in equipments %}
+    <tr>
+        <td>{{ equipment.name }}</td>
+        <td>{{ equipment.type }}</td>
+        <td>{{ equipment.description|linebreaksbr }}</td>
+        <td>{{ equipment.register_date }}</td>
+     </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+{% endblock %}

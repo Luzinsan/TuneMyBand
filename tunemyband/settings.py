@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tunemyband',
     'band',
-    'home',
+    'accounts',
     'equipment',
     'repertoire',
     'event',
@@ -47,11 +47,22 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'tunemyband.urls'
 
+USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "accounts.User"
+
+
+PAGINATION = {
+    'MAX_SIZE': 100,
+    'PAGE_SIZE': 20,
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+}
+
+# LOGIN_REDIRECT_URL = '/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,7 +134,12 @@ STATICFILES_DIRS = [
     BASE_DIR / "templates/static",
 ]
 
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

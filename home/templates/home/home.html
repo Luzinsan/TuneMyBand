@@ -1,7 +1,0 @@
-{% extends "base.html" %}
-{% block title %} {{user.username}} {% endblock %}
-{% block content %}
-    <p>Имя: {{ user.first_name }}</p>
-    <p>Фамилия: {{ user.last_name }} </p>
-    <p>Дата регистрации: {{ user.date_joined|date:"F j, Y" }} </p>
-{% endblock %}

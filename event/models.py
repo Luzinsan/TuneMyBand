@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
+from accounts.models import User
 from repertoire.models import Adaptation
 from band.models import MusicBand
 

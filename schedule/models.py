@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from band.models import MusicBand
-from django.contrib.auth.models import User
+from accounts.models import User
 
 
 class Rehearsal(models.Model):

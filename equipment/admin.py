@@ -12,7 +12,7 @@ class EquipmentAdmin(admin.ModelAdmin):
             'fields': ('owner', 'name', 'type', 'register_date')
         }),
         ('Доступность', {
-            'fields': ('state', 'music_band')
+            'fields': ('state', 'music_band_show')
         }),
         ('Другое', {
             'fields': ('description',)

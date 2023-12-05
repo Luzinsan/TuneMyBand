@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 from band.models import MusicBand
-from home.models import Genre
+from accounts.models import Genre
 from equipment.models import TypeOfEquipment
 
 

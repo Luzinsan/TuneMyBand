@@ -17,13 +17,11 @@ class MusicBand(models.Model):
     class Meta:
         verbose_name = 'Музыкальная группа'
         verbose_name_plural = 'Музыкальные группы'
+        ordering = ('-register_date',)
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-        """
         return reverse('band:detail', args=[str(self.id)])
 

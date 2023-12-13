@@ -6,5 +6,5 @@ from .fastapi import app
 
 __all__ = ["app"]
 
-app.mount("/django/static", StaticFiles(directory="static"), name="static")
-app.mount("/django", application)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("", application)

@@ -1,11 +1,8 @@
 from django.contrib import admin
-from .models import Skills, Genre, User
+from .models import Skills, Genre, User, Profile
 
-admin.site.register(User)
+
 admin.site.register(Skills)
 admin.site.register(Genre)
-
-
-# @admin.register(Profile)
-# class ProfileAdmin(admin.ModelAdmin):
-#     pass
+admin.site.register(User)
+admin.site.register(Profile)

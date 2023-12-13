@@ -1,4 +1,3 @@
-# utils/auth/user.py
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from rest_framework_simplejwt.authentication import JWTAuthentication

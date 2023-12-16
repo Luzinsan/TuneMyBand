@@ -3,5 +3,10 @@
 __pycache__/
 
 .env
+
 */migrations/*
+!*/migrations/__init__.py
+
 /reload_db.sh
+
+tests

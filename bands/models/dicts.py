@@ -7,7 +7,7 @@ class TypeEquipment(BaseDictModelMixin):
         verbose_name_plural = 'Типы оборудований'
 
 
-class Skills(BaseDictModelMixin):
+class Skill(BaseDictModelMixin):
     class Meta:
         verbose_name = 'Навык'
         verbose_name_plural = 'Навыки'

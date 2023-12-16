@@ -28,8 +28,11 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     'api',
     'common',
+    'accounts',
     'bands',
 ]
+
+AUTH_USER_MODEL = 'accounts.User'
 
 # packages
 INSTALLED_APPS += [
@@ -38,6 +41,7 @@ INSTALLED_APPS += [
     'corsheaders',
     'drf_spectacular',
     'djoser',
+    'phonenumber_field',
 ]
 
 # base

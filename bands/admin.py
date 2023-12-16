@@ -111,7 +111,7 @@ class TypeEquipmentAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-@admin.register(dicts.Skills)
+@admin.register(dicts.Skill)
 class SkillAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)

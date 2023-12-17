@@ -1,7 +1,6 @@
 from datetime import timedelta
 from pathlib import Path
 
-import rest_framework.authentication
 from environs import Env
 import os
 
@@ -9,6 +8,7 @@ env = Env()
 env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
@@ -24,27 +24,35 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-# apps
-INSTALLED_APPS += [
-    'api',
-    'common',
-    'accounts',
-    'bands',
-]
-
-AUTH_USER_MODEL = 'accounts.User'
-
 # packages
 INSTALLED_APPS += [
     'rest_framework',
     'django_filters',
     'corsheaders',
-    'drf_spectacular',
     'djoser',
     'phonenumber_field',
+    'django_generate_series',
 ]
 
-# base
+# apps
+INSTALLED_APPS += [
+    'api',
+    'common',
+    'users',
+    'breaks',
+    'bands',
+]
+
+# Custom user model
+AUTH_USER_MODEL = 'users.User'
+# Custom backend
+AUTHENTICATION_BACKENDS = ('users.backends.AuthBackend',)
+
+# after apps
+INSTALLED_APPS += [
+    'drf_spectacular',
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -53,8 +61,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'crum.CurrentRequestUserMiddleware',
 ]
-
 
 ROOT_URLCONF = 'config.urls'
 
@@ -88,13 +97,14 @@ DATABASES = {
     },
     'extra': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db_sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
 }
 
-#######################################################
-#  DJANGO REST FRAMEWORK
-#######################################################
+
+###########################
+# DJANGO REST FRAMEWORK
+###########################
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',),
@@ -103,6 +113,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
+
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
@@ -111,9 +122,8 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'common.pagination.BasePagination',
 }
-
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -131,9 +141,71 @@ AUTH_PASSWORD_VALIDATORS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-############################################
+######################
+# LOCALIZATION
+######################
+LANGUAGE_CODE = 'ru-RU'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
+
+
+######################
+# STATIC AND MEDIA
+######################
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+
+######################
+# CORS HEADERS
+######################
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ['*']
+CSRF_COOKIE_SECURE = False
+
+
+######################
+# DRF SPECTACULAR
+######################
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'TuneMyBand',
+        'DESCRIPTION': 'Система поддержки деятельности музыкальных коллективов',
+    'VERSION': '1.0.0',
+
+    'SERVE_PERMISSIONS': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'SERVE_AUTHENTICATION': [
+        'rest_framework.authentication.BasicAuthentication',
+
+    ],
+
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        "displayOperationId": True,
+        "syntaxHighlight.active": True,
+        "syntaxHighlight.theme": "arta",
+        "defaultModelsExpandDepth": -1,
+        "displayRequestDuration": True,
+        "filter": True,
+        "requestSnippetsEnabled": True,
+    },
+
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SORT_OPERATIONS': False,
+
+    'ENABLE_DJANGO_DEPLOY_CHECK': False,
+    'DISABLE_ERRORS_AND_WARNINGS': True,
+}
+
+#######################
 # DJOSER
-############################################
+#######################
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
@@ -143,8 +215,8 @@ DJOSER = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
@@ -165,53 +237,4 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=1),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
-}
-
-###########################################
-#        LOCALIZATION
-###########################################
-LANGUAGE_CODE = 'ru-ru'
-TIME_ZONE = 'Asia/Tomsk'
-USE_I18N = True
-USE_TZ = True
-
-###########################################
-#        STATIC AND MEDIA
-###########################################
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-
-############################################
-# CORS HEADERS
-############################################
-MIDDLEWARE += [
-    'corsheaders.middleware.CorsMiddleware',
-]
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ['*']
-CSRF_COOKIE_SECURE = False
-
-############################################
-# DRF SPECTACULAR
-############################################
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'API проекта TuneMyBand',
-    'DESCRIPTION': 'Система поддержки деятельности музыкального коллектива',
-    'VERSION': '1.0.0',
-
-    'SERVE_PERMISSIONS': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-    'SERVE_AUTHENTICATION': [
-        'rest_framework.authentication.BasicAuthentication',
-    ],
-    'SWAGGER_UI_SETTINGS': {
-        'DeepLinking': True,
-        'DisplayOperationId': True,
-    },
-    'COMPONENT_SPLIT_REQUEST': True,
-    'SORT_OPERATIONS': False,
 }

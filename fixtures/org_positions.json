@@ -1,0 +1,1 @@
+[{"model": "bands.position", "pk": "leader", "fields": {"name": "Руководитель", "sort": 100, "is_active": false}}, {"model": "bands.position", "pk": "manager", "fields": {"name": "Заместитель", "sort": 30, "is_active": true}}, {"model": "bands.position", "pk": "operator", "fields": {"name": "Участник", "sort": 20, "is_active": true}}]

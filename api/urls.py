@@ -1,7 +1,9 @@
 from django.urls import path, include
 
-from accounts.urls import urlpatterns as account_urls
 from api.spectacular.urls import urlpatterns as doc_urls
+from users.urls import urlpatterns as user_urls
+from bands.urls import urlpatterns as band_urls
+from breaks.urls import urlpatterns as breaks_urls
 
 app_name = 'api'
 
@@ -10,4 +12,6 @@ urlpatterns = [
 ]
 
 urlpatterns += doc_urls
-urlpatterns += account_urls
+urlpatterns += band_urls
+urlpatterns += breaks_urls
+urlpatterns += user_urls

@@ -1,174 +1,76 @@
 from django.contrib import admin
-from django.db.models import Count
-from django.urls import reverse
-from django.utils.html import format_html
 
-from .models import bands, \
-    repertoires, events, rehearsals, dicts
+from breaks.models.replacements import GroupInfo
+from bands.models import bands, groups, dicts, offers
 
 
-#######################################################
+##############################
 # INLINES
-#######################################################
-class BandInline(admin.TabularInline):
-    model = bands.Band
-    fields = ('name', 'leader', )
+##############################
+class ParticipantInline(admin.TabularInline):
+    model = bands.Participant
+    fields = ('user', 'position', 'date_joined',)
 
 
-class GroupInline(admin.TabularInline):
-    model = bands.Group
-    fields = ('name', 'band', 'manager', 'members', )
+class OfferInline(admin.TabularInline):
+    model = offers.Offer
+    fields = ('org_accept', 'user', 'user_accept',)
 
 
-class PerformanceInline(admin.TabularInline):
-    model = events.Performance
-    fields = ('event', 'group', 'song', 'artists',)
+class MemberInline(admin.TabularInline):
+    model = groups.Member
+    fields = ('participant', 'date_joined',)
 
 
-class RehearsalInline(admin.TabularInline):
-    model = rehearsals.Rehearsal
-    fields = ('group', 'date', 'time_start', 'time_end', 'members', 'description',)
+class ProfileBreakInline(admin.StackedInline):
+    model = GroupInfo
+    fields = (
+        'min_active',
+        'break_start',
+        'break_end',
+        'break_max_duration',
+    )
 
 
-class SongInline(admin.TabularInline):
-    model = repertoires.Song
-    fields = ('title', 'group', 'file', 'duration',)
-
-
-class MusicPartInline(admin.TabularInline):
-    model = repertoires.MusicPart
-    fields = ('song', 'instrument', 'name', 'file',)
-
-
-#######################################################
+##############################
 # MODELS
-#######################################################
+##############################
+@admin.register(dicts.Position)
+class PositionAdmin(admin.ModelAdmin):
+    list_display = (
+        'code', 'name', 'sort', 'is_active',
+    )
+
+
 @admin.register(bands.Band)
 class BandAdmin(admin.ModelAdmin):
-    list_display = ('created_date', 'name', 'leader', 'members_count', )
-    search_fields = ('name', )
-    list_editable = ('name',)
-    list_filter = ('created_date',)
-    inlines = (
-        GroupInline,
+    list_display = ('id', 'name', 'leader',)
+    filter_vertical = ('participants',)
+    inlines = (ParticipantInline, OfferInline,)
+    readonly_fields = (
+        'created_at', 'created_by', 'updated_at', 'updated_by',
     )
-    autocomplete_fields = ('leader',)
-    filter_horizontal = ('members',)
-
-    def members_count(self, obj):
-        return obj.members_count
-    members_count.short_description = 'Количество участников'
-
-    def get_queryset(self, request):
-        queryset = bands.Band.objects.annotate(
-            members_count=Count('members')
-        )
-        return queryset
 
 
-@admin.register(bands.Group)
+@admin.register(groups.Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ('band_link', 'name', 'manager', 'members_count',)
-    search_fields = ('band', 'name', 'manager',)
-    list_editable = ('manager',)
-    list_display_links = ('name',)
-    list_filter = ('manager',)
-    autocomplete_fields = ('band', 'manager',)
-    list_select_related = ('band',)
-    inlines = (
-        PerformanceInline,
-        RehearsalInline,
-        SongInline,
-    )
-    filter_horizontal = ('members',)
-
-    def members_count(self, obj):
-        return obj.members_count
-
-    members_count.short_description = 'Количество участников'
-
-    def get_queryset(self, request):
-        queryset = bands.Group.objects.annotate(
-            members_count=Count('members')
-        )
-        return queryset
-
-    def band_link(self, obj):
-        link = reverse(
-            'admin:bands_band_change', args=[obj.band.id]
-        )
-        return format_html('<a href="{}">{}</a>', link, obj.band)
-
-
-@admin.register(dicts.Level)
-class LevelAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('id', 'name', 'manager', )
+    list_display_links = ('id', 'name',)
     search_fields = ('name',)
-
-
-
-
-
-@admin.register(repertoires.Song)
-class SongAdmin(admin.ModelAdmin):
-    list_display = ('group', 'title', 'file', 'duration',)
-    search_fields = ('title', 'group', 'file',)
-    list_editable = ('title', 'duration',)
-    list_filter = ('duration',)
     inlines = (
-        MusicPartInline,
+        ProfileBreakInline,
+        MemberInline,
     )
-    autocomplete_fields = ('group',)
-    list_select_related = ('group', )
-    filter_horizontal = ('genres',)
-
-
-@admin.register(repertoires.MusicPart)
-class MusicPartAdmin(admin.ModelAdmin):
-    list_display = ('song', 'instrument', 'name', 'file',)
-    search_fields = ('song', 'instrument', 'name', 'file',)
-    list_editable = ('instrument', 'name',)
-    list_filter = ('instrument',)
-    autocomplete_fields = ('song', 'instrument')
-    list_select_related = ('song', 'instrument')
-
-
-@admin.register(events.Event)
-class EventAdmin(admin.ModelAdmin):
-    list_display = ('name', 'date', 'time_start', 'time_end', 'place', 'level',)
-    search_fields = ('name', 'place',)
-    list_editable = ('place',)
-    list_filter = ('level',)
-    inlines = (
-        PerformanceInline,
+    readonly_fields = (
+        'created_at', 'created_by', 'updated_at', 'updated_by',
     )
-    radio_fields = {
-        'level': admin.VERTICAL,
-    }
 
 
-@admin.register(events.Performance)
-class PerformanceAdmin(admin.ModelAdmin):
-    list_display = ('event_link', 'song', 'group',)
-    search_fields = ('event', 'song', 'group',)
-    list_filter = ('event', 'group',)
-    autocomplete_fields = ('event', 'song', 'group',)
-    list_select_related = ('event', 'song', 'group', )
-    filter_horizontal = ('artists',)
+@admin.register(offers.Offer)
+class OfferAdmin(admin.ModelAdmin):
+    list_display = ('id', 'band', 'org_accept', 'user', 'user_accept',)
+    search_fields = ('band__name', 'user__last_name',)
 
-    def event_link(self, obj):
-        link = reverse(
-            'admin:bands_event_change', args=[obj.event.id]
-        )
-        return format_html('<a href="{}">{}</a>', link, obj.event)
-
-
-@admin.register(rehearsals.Rehearsal)
-class RehearsalAdmin(admin.ModelAdmin):
-    list_display = ('group', 'date', 'time_start', 'time_end', 'description',)
-    search_fields = ('group', 'date', 'description',)
-    list_editable = ('date', 'time_start', 'time_end',)
-    list_filter = ('group', 'date',)
-    autocomplete_fields = ('group', )
-    list_select_related = ('group', )
-    filter_vertical = ('members',)
+    readonly_fields = (
+        'created_at', 'created_by', 'updated_at', 'updated_by',
+    )

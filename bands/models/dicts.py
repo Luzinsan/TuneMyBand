@@ -1,8 +1,12 @@
+from django.contrib.auth import get_user_model
+
 from common.models.mixins import BaseDictModelMixin
 
+User = get_user_model()
 
-class Level(BaseDictModelMixin):
+
+class Position(BaseDictModelMixin):
+
     class Meta:
-        verbose_name = 'Уровень'
-        verbose_name_plural = 'Уровни'
-
+        verbose_name = 'Должность'
+        verbose_name_plural = 'Должности'

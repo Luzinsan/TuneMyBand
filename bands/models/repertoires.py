@@ -9,7 +9,7 @@ class Song(models.Model):
                               verbose_name='Группа', )
     file = models.FileField('Файл аранжировки', null=True, blank=True, )
     duration = models.DurationField('Продолжительность песни', null=True, blank=True, )
-    genres = models.ManyToManyField('bands.Genre', 'songs',
+    genres = models.ManyToManyField('accounts.Genre', 'songs',
                                verbose_name='Жанры')
 
     def __str__(self):

@@ -1,11 +1,24 @@
 from django.contrib import admin
-from .models import accounts, profile
+from .models import accounts, profile, dicts
+
+
+class SkillInline(admin.StackedInline):
+    model = dicts.Skill
+    fields = ('code', 'name', 'sort', 'is_active',)
+
+
+class GenreInline(admin.StackedInline):
+    model = dicts.Genre
+    fields = ('code', 'name', 'sort', 'is_active',)
 
 
 class ProfileInline(admin.StackedInline):
     model = profile.Profile
     fields = ('photo', 'birthday', 'sex', 'skills', 'genres', 'about',)
-    filter_horizontal = ('skills', 'genres',)
+    inlines = (
+        SkillInline,
+        GenreInline
+    )
 
 
 @admin.register(accounts.User)
@@ -16,5 +29,4 @@ class UserAdmin(admin.ModelAdmin):
     inlines = (
         ProfileInline,
     )
-
 

@@ -11,8 +11,6 @@ class Band(models.Model):
                                verbose_name='Руководитель', )
     members = models.ManyToManyField(User, 'bands_members',
                                      verbose_name='Участники', blank=True, )
-    # created_by = models.ForeignKey()
-    # updated_by = models.ForeignKey()
     created_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата регистрации в системе')
 
     class Meta:

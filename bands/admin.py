@@ -111,18 +111,6 @@ class TypeEquipmentAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-@admin.register(dicts.Skill)
-class SkillAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
-
-
-@admin.register(dicts.Genre)
-class GenreAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
-
-
 @admin.register(dicts.Level)
 class LevelAdmin(admin.ModelAdmin):
     list_display = ('name',)

@@ -16,9 +16,9 @@ class Profile(models.Model):
                                ('n', 'Не определён')
                            ))
     about = models.TextField(null=True, blank=True, verbose_name='О себе')
-    skills = models.ManyToManyField('bands.Skill', 'profiles_skills',
+    skills = models.ManyToManyField('accounts.Skill', 'profiles_skills',
                                     verbose_name='Навыки', blank=True)
-    genres = models.ManyToManyField('bands.Genre', 'profiles_genres',
+    genres = models.ManyToManyField('accounts.Genre', 'profiles_genres',
                                     verbose_name='Любимые жанры', blank=True)
     
     class Meta:

@@ -1,6 +1,12 @@
 from common.models.mixins import BaseDictModelMixin
 
 
+class TypeEquipment(BaseDictModelMixin):
+    class Meta:
+        verbose_name = 'Тип оборудования'
+        verbose_name_plural = 'Типы оборудований'
+
+
 class Skill(BaseDictModelMixin):
     class Meta:
         verbose_name = 'Навык'

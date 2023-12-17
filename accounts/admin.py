@@ -2,6 +2,12 @@ from django.contrib import admin
 from .models import accounts, profile, dicts
 
 
+@admin.register(dicts.TypeEquipment)
+class TypeEquipmentAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+
 class SkillInline(admin.StackedInline):
     model = dicts.Skill
     fields = ('code', 'name', 'sort', 'is_active',)

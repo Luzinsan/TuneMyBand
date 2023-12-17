@@ -105,12 +105,6 @@ class GroupAdmin(admin.ModelAdmin):
         return format_html('<a href="{}">{}</a>', link, obj.band)
 
 
-@admin.register(dicts.TypeEquipment)
-class TypeEquipmentAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
-
-
 @admin.register(dicts.Level)
 class LevelAdmin(admin.ModelAdmin):
     list_display = ('name',)

@@ -3,7 +3,7 @@ import pdb
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from bands.models.dicts import TypeEquipment
+from accounts.models.dicts import TypeEquipment
 
 User = get_user_model()
 
@@ -12,7 +12,7 @@ class Equipment(models.Model):
     owner = models.ForeignKey(User, models.CASCADE, 'equipments_users',
                               verbose_name='Владелец', )
     name = models.CharField(max_length=200, verbose_name='Название', )
-    type = models.ForeignKey('bands.TypeEquipment', models.RESTRICT, 'equipments_types',
+    type = models.ForeignKey('accounts.TypeEquipment', models.RESTRICT, 'equipments_types',
                              verbose_name='Тип', blank=True, null=True,
                              )
     status = models.BooleanField(default=True,

@@ -3,7 +3,7 @@ from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .models import bands, equipments, \
+from .models import bands, \
     repertoires, events, rehearsals, dicts
 
 
@@ -18,11 +18,6 @@ class BandInline(admin.TabularInline):
 class GroupInline(admin.TabularInline):
     model = bands.Group
     fields = ('name', 'band', 'manager', 'members', )
-
-
-class EquipmentInline(admin.TabularInline):
-    model = equipments.Equipment
-    fields = ('owner', 'name', 'type', 'status', 'description',)
 
 
 class PerformanceInline(admin.TabularInline):
@@ -111,17 +106,7 @@ class LevelAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-@admin.register(equipments.Equipment)
-class EquipmentAdmin(admin.ModelAdmin):
-    list_display = ('owner', 'name', 'type', 'status', 'description',)
-    search_fields = ('owner', 'name', 'type', 'description',)
-    list_editable = ('name', 'description',)
-    list_filter = ('type',)
-    autocomplete_fields = ('owner',)
-    list_select_related = ('owner', 'type')
-    radio_fields = {
-        'type': admin.VERTICAL,
-    }
+
 
 
 @admin.register(repertoires.Song)

@@ -26,7 +26,7 @@ class Song(models.Model):
 class MusicPart(models.Model):
     song = models.ForeignKey('bands.Song', models.CASCADE, 'parts_songs',
                              verbose_name='Музыкальное произведение', )
-    instrument = models.ForeignKey('bands.Equipment', models.CASCADE, 'parts_instruments',
+    instrument = models.ForeignKey('accounts.Equipment', models.CASCADE, 'parts_instruments',
                                    verbose_name='Инструмент', )
     name = models.CharField('Название', max_length=30, )
     file = models.FileField('Файл партитуры', null=True, blank=True, )
